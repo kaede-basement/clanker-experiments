@@ -155,6 +155,14 @@ jobs:
           bun ./scripts/check-windows-7-pe.ts $appBinary
           bun ./scripts/check-windows-7-pe.ts --lenient $builtSidecar
 
+      # The same as in kaede's build.yml: artifact names cannot contain '/',
+      # which a pull request's ref name ('29/merge') has
+      - name: Clear the GitHub ref name from invalid characters
+        shell: bash
+        run: |
+          CLEAR_REF_NAME="${GITHUB_REF_NAME//\//-}"
+          echo "CLEAR_REF_NAME=$CLEAR_REF_NAME" >> "$GITHUB_ENV"
+
       - name: Bundle the portable build
         shell: pwsh
         run: |
@@ -168,7 +176,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           if-no-files-found: "warn"
-          name: "${{ steps.json_properties.outputs.productName }}-win7-portable-${{ steps.json_properties.outputs.version }}-${{ github.ref_name }}"
+          name: "${{ steps.json_properties.outputs.productName }}-win7-portable-${{ steps.json_properties.outputs.version }}-${{ env.CLEAR_REF_NAME }}"
           path: "portable-build/"
 
       # Release-only
@@ -257,7 +265,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           if-no-files-found: "warn"
-          name: "${{ steps.json_properties.outputs.productName }}-win7-portable-full-${{ steps.json_properties.outputs.version }}-${{ github.ref_name }}"
+          name: "${{ steps.json_properties.outputs.productName }}-win7-portable-full-${{ steps.json_properties.outputs.version }}-${{ env.CLEAR_REF_NAME }}"
           path: "portable-build/"
 
       # Release-only
