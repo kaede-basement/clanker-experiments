@@ -39,8 +39,8 @@ jobs:
 
       - name: Swap placeholder exports with actual Wails-only utils
         run: |
-          rm -rf ./src/lib/wails
-          mv $GITHUB_WORKSPACE/clanker-experiments/src/lib/__wails ./src/lib/wails
+          rm -rf ./src/__backends__/wails
+          mv $GITHUB_WORKSPACE/clanker-experiments/src/__backends__/wails ./src/__backends__/wails
         shell: bash
 
       - name: Setup bun
